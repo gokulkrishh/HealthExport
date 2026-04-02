@@ -1,0 +1,28 @@
+name: HealthExport
+options:
+  bundleIdPrefix: com.gokulkrishh
+  deploymentTarget:
+    iOS: "26.0"
+  generateEmptyDirectories: true
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: minimal
+targets:
+  HealthExport:
+    type: application
+    platform: iOS
+    sources:
+      - path: HealthExport
+        excludes:
+          - Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.gokulkrishh.HealthExport
+        CODE_SIGN_ENTITLEMENTS: HealthExport/HealthExport.entitlements
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_FILE: HealthExport/Info.plist
+        INFOPLIST_KEY_NSHealthShareUsageDescription: "HealthExport needs access to your health data so you can select and export it as JSON or CSV files."
+        INFOPLIST_KEY_CFBundleDisplayName: HealthExport
+    dependencies:
+      - sdk: HealthKit.framework

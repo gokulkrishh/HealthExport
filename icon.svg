@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <linearGradient id="heart" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b6b"/>
+      <stop offset="100%" style="stop-color:#ee5a24"/>
+    </linearGradient>
+    <linearGradient id="arrow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#74b9ff"/>
+      <stop offset="100%" style="stop-color:#0984e3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="224" fill="url(#bg)"/>
+
+  <!-- Heart -->
+  <g transform="translate(512, 420) scale(1.1)">
+    <path d="M0 80 C0 80, -200 -80, -200 -40 C-200 40, -120 60, 0 180 C120 60, 200 40, 200 -40 C200 -80, 0 80, 0 80Z"
+          fill="url(#heart)" opacity="0.9"/>
+    <path d="M0 80
+             C0 80, -200 -80, -200 -40
+             C-200 -100, -140 -160, -100 -160
+             C-40 -160, 0 -100, 0 -80
+             C0 -100, 40 -160, 100 -160
+             C140 -160, 200 -100, 200 -40
+             C200 -80, 0 80, 0 80Z"
+          fill="url(#heart)"/>
+  </g>
+
+  <!-- Export arrow -->
+  <g transform="translate(512, 700)">
+    <!-- Arrow shaft -->
+    <rect x="-20" y="-100" width="40" height="120" rx="8" fill="url(#arrow)"/>
+    <!-- Arrow head -->
+    <polygon points="0,-150 60,-80 -60,-80" fill="url(#arrow)"/>
+    <!-- Base tray -->
+    <path d="M-120,20 L-120,60 Q-120,80 -100,80 L100,80 Q120,80 120,60 L120,20"
+          fill="none" stroke="url(#arrow)" stroke-width="16" stroke-linecap="round"/>
+  </g>
+</svg>
