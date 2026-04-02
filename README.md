@@ -37,8 +37,8 @@ Set your development team in **Signing & Capabilities**, then build and run.
 | Group | Categories |
 |-------|-----------|
 | Activity | Steps, Distance, Active Energy, Exercise Minutes, Stand Time, Flights Climbed |
-| Body | Weight, Height, BMI, Body Fat % |
-| Heart | Heart Rate, Resting Heart Rate, HRV, Blood Pressure |
+| Body | Weight, Height, BMI, Body Fat %, Blood Glucose |
+| Heart | Heart Rate, Resting Heart Rate, HRV, Blood Pressure, VO2 Max, Oxygen Saturation, Respiratory Rate |
 | Sleep | Sleep Analysis |
 | Nutrition | Dietary Energy, Water, Caffeine |
 | Workouts | All workout types with duration and calories |
