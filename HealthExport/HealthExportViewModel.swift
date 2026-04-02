@@ -4,6 +4,9 @@ import HealthKit
 @MainActor
 @Observable
 final class HealthExportViewModel {
+    var hasCompletedOnboarding: Bool = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding") {
+        didSet { UserDefaults.standard.set(hasCompletedOnboarding, forKey: "hasCompletedOnboarding") }
+    }
     var selectedCategories: Set<String> = []
     var dateRange: DateRange = .month
     var customStartDate = Calendar.current.date(byAdding: .month, value: -1, to: Date()) ?? Date()
@@ -115,6 +118,12 @@ final class HealthExportViewModel {
 
             exportedFileURL = try ExportService.writeToTemporaryFile(data: fileData, format: exportFormat)
             showShareSheet = true
+        } catch let error as HKError where error.code == .errorAuthorizationDenied {
+            errorMessage = "Health data access was denied. Please enable permissions in Settings > Privacy & Security > Health."
+            showError = true
+        } catch let error as HKError where error.code == .errorAuthorizationNotDetermined {
+            errorMessage = "Health data access needs to be granted. Please try exporting again."
+            showError = true
         } catch {
             errorMessage = error.localizedDescription
             showError = true

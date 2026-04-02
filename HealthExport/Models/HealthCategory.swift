@@ -30,6 +30,7 @@ enum HealthDataType {
     case quantity(unit: HKUnit, unitName: String)
     case category
     case workout
+    case bloodPressure
 }
 
 // MARK: - Health Category
@@ -88,6 +89,9 @@ extension HealthCategory {
         HealthCategory(id: "bodyFat", name: "Body Fat %", group: .body, icon: "percent",
                        sampleType: HKQuantityType(.bodyFatPercentage),
                        dataType: .quantity(unit: .percent(), unitName: "%")),
+        HealthCategory(id: "bloodGlucose", name: "Blood Glucose", group: .body, icon: "drop.fill",
+                       sampleType: HKQuantityType(.bloodGlucose),
+                       dataType: .quantity(unit: HKUnit.gramUnit(with: .milli).unitDivided(by: .literUnit(with: .deci)), unitName: "mg/dL")),
 
         // Heart
         HealthCategory(id: "heartRate", name: "Heart Rate", group: .heart, icon: "heart.fill",
@@ -99,12 +103,18 @@ extension HealthCategory {
         HealthCategory(id: "hrv", name: "Heart Rate Variability", group: .heart, icon: "waveform.path.ecg",
                        sampleType: HKQuantityType(.heartRateVariabilitySDNN),
                        dataType: .quantity(unit: .secondUnit(with: .milli), unitName: "ms")),
-        HealthCategory(id: "bloodPressureSystolic", name: "Blood Pressure (Systolic)", group: .heart, icon: "heart.text.clipboard",
-                       sampleType: HKQuantityType(.bloodPressureSystolic),
-                       dataType: .quantity(unit: .millimeterOfMercury(), unitName: "mmHg")),
-        HealthCategory(id: "bloodPressureDiastolic", name: "Blood Pressure (Diastolic)", group: .heart, icon: "heart.text.clipboard",
-                       sampleType: HKQuantityType(.bloodPressureDiastolic),
-                       dataType: .quantity(unit: .millimeterOfMercury(), unitName: "mmHg")),
+        HealthCategory(id: "bloodPressure", name: "Blood Pressure", group: .heart, icon: "heart.text.clipboard",
+                       sampleType: HKCorrelationType(.bloodPressure),
+                       dataType: .bloodPressure),
+        HealthCategory(id: "vo2Max", name: "VO2 Max", group: .heart, icon: "lungs.fill",
+                       sampleType: HKQuantityType(.vo2Max),
+                       dataType: .quantity(unit: HKUnit.literUnit(with: .milli).unitDivided(by: .gramUnit(with: .kilo).unitMultiplied(by: .minute())), unitName: "mL/kg/min")),
+        HealthCategory(id: "oxygenSaturation", name: "Oxygen Saturation", group: .heart, icon: "drop.circle.fill",
+                       sampleType: HKQuantityType(.oxygenSaturation),
+                       dataType: .quantity(unit: .percent(), unitName: "%")),
+        HealthCategory(id: "respiratoryRate", name: "Respiratory Rate", group: .heart, icon: "wind",
+                       sampleType: HKQuantityType(.respiratoryRate),
+                       dataType: .quantity(unit: .count().unitDivided(by: .minute()), unitName: "breaths/min")),
 
         // Sleep
         HealthCategory(id: "sleep", name: "Sleep Analysis", group: .sleep, icon: "bed.double.fill",

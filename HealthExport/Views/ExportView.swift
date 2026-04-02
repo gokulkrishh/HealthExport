@@ -81,6 +81,13 @@ struct ExportView: View {
             }
             .alert("Error", isPresented: $viewModel.showError) {
                 Button("OK") {}
+                if viewModel.errorMessage?.contains("Settings") == true {
+                    Button("Open Settings") {
+                        if let url = URL(string: UIApplication.openSettingsURLString) {
+                            UIApplication.shared.open(url)
+                        }
+                    }
+                }
             } message: {
                 Text(viewModel.errorMessage ?? "An unknown error occurred.")
             }

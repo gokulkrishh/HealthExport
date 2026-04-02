@@ -20,5 +20,12 @@
 	<dict/>
 	<key>NSHealthShareUsageDescription</key>
 	<string>HealthExport needs access to your health data so you can select and export it as JSON or CSV files.</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
 </dict>
 </plist>

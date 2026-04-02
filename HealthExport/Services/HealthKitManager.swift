@@ -8,7 +8,12 @@ final class HealthKitManager: Sendable {
     }
 
     func requestAuthorization(for categories: [HealthCategory]) async throws {
-        let readTypes: Set<HKObjectType> = Set(categories.map { $0.sampleType as HKObjectType })
+        var readTypes: Set<HKObjectType> = Set(categories.map { $0.sampleType as HKObjectType })
+        // Blood pressure correlation also needs its underlying quantity types
+        if categories.contains(where: { $0.id == "bloodPressure" }) {
+            readTypes.insert(HKQuantityType(.bloodPressureSystolic))
+            readTypes.insert(HKQuantityType(.bloodPressureDiastolic))
+        }
         try await healthStore.requestAuthorization(toShare: Set(), read: readTypes)
     }
 
@@ -32,6 +37,8 @@ final class HealthKitManager: Sendable {
             )
         case .workout:
             return try await fetchWorkouts(from: startDate, to: endDate)
+        case .bloodPressure:
+            return try await fetchBloodPressure(from: startDate, to: endDate)
         }
     }
 
@@ -147,6 +154,49 @@ final class HealthKitManager: Sendable {
                         value: calories,
                         unit: "kcal",
                         metadata: activityName
+                    )
+                }
+                continuation.resume(returning: dataPoints)
+            }
+            healthStore.execute(query)
+        }
+    }
+
+    // MARK: - Blood Pressure
+
+    private func fetchBloodPressure(from startDate: Date, to endDate: Date) async throws -> [HealthDataPoint] {
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+
+        return try await withCheckedThrowingContinuation { continuation in
+            let query = HKSampleQuery(
+                sampleType: HKCorrelationType(.bloodPressure),
+                predicate: predicate,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)]
+            ) { _, results, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+
+                let correlations = (results as? [HKCorrelation]) ?? []
+                let mmHg = HKUnit.millimeterOfMercury()
+                let dataPoints = correlations.compactMap { correlation -> HealthDataPoint? in
+                    let systolicSample = correlation.objects(for: HKQuantityType(.bloodPressureSystolic)).first as? HKQuantitySample
+                    let diastolicSample = correlation.objects(for: HKQuantityType(.bloodPressureDiastolic)).first as? HKQuantitySample
+
+                    guard let systolic = systolicSample, let diastolic = diastolicSample else { return nil }
+
+                    let systolicValue = systolic.quantity.doubleValue(for: mmHg)
+                    let diastolicValue = diastolic.quantity.doubleValue(for: mmHg)
+
+                    return HealthDataPoint(
+                        category: "Blood Pressure",
+                        startDate: correlation.startDate,
+                        endDate: correlation.endDate,
+                        value: systolicValue,
+                        unit: "mmHg",
+                        metadata: "diastolic: \(Int(diastolicValue)) mmHg"
                     )
                 }
                 continuation.resume(returning: dataPoints)

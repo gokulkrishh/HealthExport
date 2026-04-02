@@ -5,7 +5,9 @@ struct ContentView: View {
     @State private var viewModel = HealthExportViewModel()
 
     var body: some View {
-        if viewModel.isHealthKitAvailable {
+        if !viewModel.hasCompletedOnboarding {
+            OnboardingView(viewModel: viewModel)
+        } else if viewModel.isHealthKitAvailable {
             TabView {
                 Tab("Categories", systemImage: "list.bullet") {
                     CategoryListView(viewModel: viewModel)
@@ -15,6 +17,10 @@ struct ContentView: View {
                     ExportView(viewModel: viewModel)
                 }
                 .badge(viewModel.selectedCategoryCount)
+
+                Tab("Settings", systemImage: "gearshape") {
+                    SettingsView()
+                }
             }
         } else {
             ContentUnavailableView(
