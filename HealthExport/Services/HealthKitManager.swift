@@ -8,8 +8,13 @@ final class HealthKitManager: Sendable {
     }
 
     func requestAuthorization(for categories: [HealthCategory]) async throws {
-        var readTypes: Set<HKObjectType> = Set(categories.map { $0.sampleType as HKObjectType })
-        // Blood pressure correlation also needs its underlying quantity types
+        // Blood pressure is a correlation type, which can't be authorized directly —
+        // request its underlying systolic/diastolic quantity types instead.
+        var readTypes: Set<HKObjectType> = Set(
+            categories
+                .filter { $0.id != "bloodPressure" }
+                .map { $0.sampleType as HKObjectType }
+        )
         if categories.contains(where: { $0.id == "bloodPressure" }) {
             readTypes.insert(HKQuantityType(.bloodPressureSystolic))
             readTypes.insert(HKQuantityType(.bloodPressureDiastolic))
